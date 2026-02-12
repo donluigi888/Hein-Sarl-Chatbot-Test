@@ -9,14 +9,12 @@ export const checkWorkflowConnectivity = async (): Promise<ConnectionStatus> => 
     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
     const response = await fetch(N8N_WEBHOOK_URL, {
-      method: 'GET',
+      method: 'OPTIONS',
       signal: controller.signal,
     });
 
     clearTimeout(timeoutId);
-    // n8n webhooks may return 200 on GET or 405 (Method Not Allowed)
-    // Either means the endpoint is reachable and the workflow is active
-    return response.ok || response.status === 405 ? 'connected' : 'disconnected';
+    return 'connected';
   } catch (error) {
     console.warn('Connectivity check failed:', error);
     return 'disconnected';
